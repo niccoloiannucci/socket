@@ -38,8 +38,8 @@ def genera_richieste(num,address,port):
         operazione="*"
     else:
         operazione="%"
-        print(f"{primoNumero}{operazione}{secondoNumero}")
-    secondoNumero=random.randint(0,100)
+    print(f"{primoNumero}{operazione}{secondoNumero}")
+    
 
 
 
@@ -47,7 +47,7 @@ def genera_richieste(num,address,port):
     messaggio={
         'primoNumero':primoNumero,
         'operazione':operazione,
-        'secondoNumero':secondoNumero,
+        'secondoNumero':secondoNumero
 
     }
     messaggio=json.dumps(messaggio)
@@ -66,21 +66,23 @@ def genera_richieste(num,address,port):
 if __name__ == '__main__':
     start_time=time.time()
     # 3 ciclo per chiamare NUM_WORKERS volte la funzione genera richieste alla quale passo i parametri (num,SERVER_ADDRESS, SERVER_PORT)
-    for num in range(NUM_WORKERS):
+    for num in range(0,NUM_WORKERS):
         genera_richieste(num,SERVER_ADDRESS, SERVER_PORT)
     end_time=time.time()
     print("Total SERIAL time=", end_time - start_time) 
     start_time=time.time()
-    threads=[]
+    threads=[] #creo una listas
     # 4 ciclo per chiamare NUM_WORKERS volte la funzione genera richieste tramite l'avvio di un thread al quale passo i parametri args=(num,SERVER_ADDRESS, SERVER_PORT,)
     # ad ogni iterazione appendo il thread creato alla lista threads
-for num in range(NUM_WORKERS):
-    threads.append(threading.Thread(args=(num,SERVER_ADDRESS, SERVER_PORT)))
+    for num in range(NUM_WORKERS):
+        threads.append(threading.Thread(args=(num,SERVER_ADDRESS, SERVER_PORT)))
     # 5 avvio tutti i thread
     for i in range(len(threads)):
-        threads[1].start()
+        threads[i].start()
     # 6 aspetto la fine di tutti i thread 
-    threads[1].start()
+    #termino il ciclo
+    for i in range(len(threads)):
+        threads[i].join()
     end_time=time.time()
     print("Total THREADS time= ", end_time - start_time)
     start_time=time.time()
@@ -89,8 +91,8 @@ for num in range(NUM_WORKERS):
     # ad ogni iterazione appendo il thread creato alla lista threads
     for num in range(0,NUM_WORKERS):
         process.append(multiprocessing.Process(target=genera_richieste, args=(num,SERVER_ADDRESS,SERVER_PORT,)))
-        for num in range(0,NUM_WORKERS):
-            process[num].start()
+    for num in range(0,NUM_WORKERS):
+        process[num].start()
     # 8 avvio tutti i processi
     for num in range(0,NUM_WORKERS):
         process[num].join()
