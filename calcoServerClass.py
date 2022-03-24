@@ -3,13 +3,13 @@ from threading import Thread
 SERVER_ADDRESS='127.0.0.1'
 SERVER_PORT=22225
 class Server():
-    def _init_(self, address, port):
+    def __init__(self, address, port):
         self.address=address
         self.port=port
     
     def avvia_server(self):
         sock_listen=socket.socket()
-        sock_listen.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADOR, 1)
+        sock_listen.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock_listen.bind((self.address, self.port))
         sock_listen.listen(5)
         print("Server in ascolto su %s." % str((self.address, self.port)))
